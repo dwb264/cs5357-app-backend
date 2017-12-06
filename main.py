@@ -226,7 +226,7 @@ def get_user_profile(user_id):
     if session.get('user') is None:
         raise Unauthorized()
 
-    user = users.find_one({'_id': ObjectId(user_id)}, projection={'password': False}) # Don't return the user's password
+    user = users.find_one({'_id': ObjectId.ObjectId(user_id)}, projection={'password': False}) # Don't return the user's password
     response = json_util.dumps(user)
 
     return response
@@ -375,7 +375,7 @@ def get_jobs():
         res = json_util.dumps(job)
         return Response(res, 200) # will return None if the user has no open job, this is ok
     else:
-        all_jobs = json_util.dumps(jobs.find({}))
+        all_jobs = json_util.dumps(jobs.find({'job_status': 'Open'}))
         return Response(all_jobs, 200)
 
 @app.route('/jobs/<jobid>', methods=['GET'])

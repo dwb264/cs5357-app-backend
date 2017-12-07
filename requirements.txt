@@ -5,3 +5,5 @@ authy==2.1.2
 flask-bcrypt==0.7.1
 pillow==2.7.0
 werkzeug==0.12.2
+flask_swagger==0.2.13
+flask_swagger_ui==3.6.0

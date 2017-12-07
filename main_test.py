@@ -64,7 +64,7 @@ class MainTestCase(unittest.TestCase):
 	    return self.app.post('/login', data=json.dumps({
 		    'username':username,
 		    'password':password
-	    }),headers, follow_redirects=True)
+	    }),headers=headers, follow_redirects=True)
 
 
 

@@ -28,7 +28,7 @@ class MainTestCase(unittest.TestCase):
 	    #assert r.status_code == 200
 	    #assert 'Hello World' in r.data.decode('utf-8')
 	
-	def register(self, email, password):
+	def register(self, username, password):
     		return self.app.post('/profile',data=dict(username=username, password=password),
 	        follow_redirects=True)
 

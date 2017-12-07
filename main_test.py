@@ -30,7 +30,7 @@ class MainTestCase(unittest.TestCase):
 	    #assert r.status_code == 200
 	    #assert 'Hello World' in r.data.decode('utf-8')
 	
-	def register(self, username, password,types,first_name,last_name,phone,zipcode,payment,vehicle):
+	'''def register(self, username, password,types,first_name,last_name,phone,zipcode,payment,vehicle):
 		headers = {'content-type': 'application/json'}
     		return self.app.post('/profile',data=json.dumps({'username':username, 'password':password,'type':types,'first_name':first_name,'last_name':last_name,'phone':phone,'zipcode':zipcode,'payment':payment,'vehicle':vehicle}),headers=headers,
 	        follow_redirects=True)
@@ -48,7 +48,7 @@ class MainTestCase(unittest.TestCase):
 	    return self.app.post('/login', data=json.dumps({
 		    'username':username,
 		    'password':password
-	    }),headers=headers, follow_redirects=True)
+	    }),headers=headers, follow_redirects=True)'''
 
 
 

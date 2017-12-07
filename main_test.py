@@ -29,7 +29,8 @@ class MainTestCase(unittest.TestCase):
 	    #assert 'Hello World' in r.data.decode('utf-8')
 	
 	def register(self, username, password):
-    		return self.app.post('/profile',data=json.dumps({'username':username, 'password':password}),
+		headers = {'content-type': 'application/json'}
+    		return self.app.post('/profile',data=json.dumps({'username':username, 'password':password}),headers=headers,
 	        follow_redirects=True)
 
 

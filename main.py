@@ -1,7 +1,7 @@
 import json
 
 from bson import json_util
-from flask import Flask, request, Response, session, jsonify
+from flask import Flask, request, Response, session, jsonify, send_file
 from flask_pymongo import PyMongo
 from pymongo.errors import DuplicateKeyError
 from werkzeug import security
@@ -558,7 +558,7 @@ def acceptOffer():
 
     jobs.update_one({'_id':ObjectId.ObjectId(body.get('job_id'))},{'$set':{"job_status":"Closed"}})
 
-    return Response(200)
+    return Response(status=200)
 
 
 # This allows you to run locally.

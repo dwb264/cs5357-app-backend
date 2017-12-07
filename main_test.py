@@ -18,7 +18,8 @@ class MainTestCase(unittest.TestCase):
 	'''def test_home_status_code(self):
 		result = self.app.get('/') 
 		self.assertEqual(result.status_code, 200) '''
-	def login(self, username, password):
+	
+	def login(self, username = 'zeeshan', password = 'pbkdf2:sha1:1000$IhKuD8vd$f5c0486e04a40f2c7c5a7cafebd232351477c8c4'):
 	    """Login helper function"""
 	    return main.app.post('/login', data=dict(
 		    username=username,

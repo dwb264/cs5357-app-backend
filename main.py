@@ -560,7 +560,7 @@ def acceptOffer():
 
     jobs.update_one({'_id':ObjectId.ObjectId(body.get('job_id'))},{'$set':{"job_status":"Closed"}})
 
-    return Response(200)
+    return Response(status=200)
 
 @app.after_request
 def add_header(r):

@@ -1,7 +1,7 @@
 import json
 
 from bson import json_util
-from flask import Flask, request, Response, session, jsonify
+from flask import Flask, request, Response, session, jsonify, send_file
 from flask_pymongo import PyMongo
 from pymongo.errors import DuplicateKeyError
 from werkzeug import security
@@ -83,7 +83,7 @@ jobPhotos = db['job_photos']
 @app.route("/spec")
 def spec():
     return send_file("static/spec.yaml")
-    
+
 
 @app.route('/profile', methods=['POST'])
 def add_new_user():
@@ -159,6 +159,8 @@ def add_new_user():
     serializable_user_obj = json.loads(json_util.dumps(user))
 
     session['user'] = serializable_user_obj["_id"]
+
+    print serializable_user_obj
 
     # returning serializable_user_obj is necessary to prevent 401 error for users with profile pics
     return Response(serializable_user_obj, status=201)
@@ -559,6 +561,18 @@ def acceptOffer():
     jobs.update_one({'_id':ObjectId.ObjectId(body.get('job_id'))},{'$set':{"job_status":"Closed"}})
 
     return Response(200)
+
+@app.after_request
+def add_header(r):
+    """
+    Add headers to both force latest IE rendering engine or Chrome Frame,
+    and also to cache the rendered page for 10 minutes.
+    """
+    r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    r.headers["Pragma"] = "no-cache"
+    r.headers["Expires"] = "0"
+    r.headers['Cache-Control'] = 'public, max-age=0'
+    return r
 
 
 # This allows you to run locally.

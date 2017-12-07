@@ -4,16 +4,14 @@
     title: "Man In van"
     description: "An app that connects movers to individuals in need of their services"
     contact: 
-      name: "Swagger API Team"
-      email: "apiteam@swagger.io"
-      url: "http://swagger.io"
+      name: "Ghost Robots team"
     license: 
-      name: "MIT"
+      name: "MIT License"
       url: "http://github.com/gruntjs/grunt/blob/master/LICENSE-MIT"
-  host: "localhost:8081"
+  host: "man-in-a-van.appspot.com/"
   basePath: "/"
   schemes: 
-    - "http"
+    - "https"
   consumes: 
     - "application/json"
   produces: 
@@ -21,7 +19,11 @@
   paths: 
     /profile: 
       get: 
-        description: "Returns profile of current user"
+        description: "Returns profile of user with ID specified in path. if no ID specified, returns current user profile"
+        parameters:
+          -
+            name: "user ID"
+            in: "path"
         produces: 
           - "application/json"
         responses: 
@@ -29,7 +31,7 @@
             description: "User returned"
             schema: 
               items: 
-                $ref: "#/definitions/NewUser"
+                $ref: "#/definitions/User"
           "401":
             description: "Unauthorized access - user not logged in"  
           default: 
@@ -46,90 +48,194 @@
             description: "New user details"
             required: true
             schema:
-              $ref: "#/definitions/NewUser"
+              $ref: "#/definitions/User"
         responses: 
           "201":
             description: "User created successfully"
           "400":
             description: "Bad or missing data"
-    /pets/{id}: 
-      get: 
-        description: "Returns a user based on a single ID, if the user does not have access to the pet"
-        operationId: "findPetById"
-        produces: 
-          - "application/json"
-          - "application/xml"
-          - "text/xml"
-          - "text/html"
-        parameters: 
-          - 
-            name: "id"
-            in: "path"
-            description: "ID of pet to fetch"
-            required: true
-            type: "integer"
-            format: "int64"
-        responses: 
+      put:
+        description: "Update user profile data"
+        parameters:
+          -
+            name: "userData"
+            in: "body"
+            description: "Udapted user profile details"
+            schema:
+              $ref: "#/definitions/User"
+        responses:
           "200":
-            description: "pet response"
-            schema: 
-              $ref: "#/definitions/Pet"
-          default: 
-            description: "unexpected error"
-            schema: 
-              $ref: "#/definitions/ErrorModel"
-      delete: 
-        description: "deletes a single pet based on the ID supplied"
-        operationId: "deletePet"
-        parameters: 
-          - 
-            name: "id"
-            in: "path"
-            description: "ID of pet to delete"
+            description: "User profile updated successfully"
+          "401":
+            description: "Unauthorized"
+          "400":
+            description: "Bad or missing data"
+
+    /verify:
+      post:
+        description: Verify your phone number
+        parameters:
+          -
+            name: "code"
+            in: "body"
             required: true
-            type: "integer"
-            format: "int64"
-        responses: 
-          "204":
-            description: "pet deleted"
-          default: 
-            description: "unexpected error"
-            schema: 
-              $ref: "#/definitions/ErrorModel"
+            schema:
+              type: "object"
+              required: 
+                - "code"
+              properties:
+                code:
+                  type: "string"
+            description: "Code sent to number for verification"
+        responses:
+          "200":
+            description: "Code accepted. Number verified"
+          "400":
+            description: "Invalid or wrong code/ No phone number in database"
+          "401":
+            description: "Unauthorized"
+    /login:
+      post:
+        description: "User login endpoint"
+        parameters:
+          -
+            name: "login details"
+            in: "body"
+            required: true
+            schema:
+              type: "object"
+              required:
+                - "username"
+                - "password"
+                - "type"
+              properties:
+                username:
+                  type: "string"
+                password:
+                  type: "string"
+                type:
+                  type: "string"
+        responses:
+          "200":
+            description: "Logged in successfully. Session started"
+          "400":
+            description: "Missing data or wrong username/password combination"
+
+    /logout:
+      post:
+        description: "Clear session and logout"
+        responses:
+          "200":
+            description: "session data cleared"
+
+    /jobs:
+      post:
+        description: "Add a new request for a job"
+        parameters:
+          -
+            name: "job details"
+            in: "body"
+            required: true
+            schema:
+              $ref: "#/definitions/Job"
+        response:
+          "200":
+            description: "Job added successfully"
+          "400":
+            description: "Bad or missing data"
+          "401":
+            description: "Unauthorized"
+      get:
+        description: "Get job details if job provided. Gets all jobs if no ID specified"
+        parameters:
+          -
+            id: "Job ID"
+            in: "path"
+            type: "string"
+        responses:
+          "200":
+            description: "Requested job returned"
+            schema:
+              $ref: "#/definitions/Job"
+    /review:
+      post:
+        description: Add a review for a job
+        parameters:
+          -
+            name: "review"
+            in: "body"
+            required: true
+            schema:
+              $ref: "#/definitions/Review"
+        responses:
+          "200":
+            description: "Review added successfully"
+          "400":
+            description: "Bad or missing data"
+          "401":
+            description: "unauthorized"
+    /addOffer:
+      post:
+        description: "Add an offer for an open job"
+        parameters:
+          -
+            name: "offer"
+            in: "body"
+            required: true
+            schema:
+              $ref: "#/definitions/Offer"
+        responses:
+          "200":
+            description: "Offer added successfully"
+          "401":
+            description: "Unauthorized"
+          "400":
+            description: "Bad or missing data"
+    /getOffers:
+      get:
+        description: "Get all offers associated with a job"
+        parameters:
+          -
+            name: "Job ID"
+            in: "path"
+            required: true
+            type: string
+        responses:
+          "401":
+            description: "Unauthorized"
+          "400":
+            description: "Bad or missing data"
+          "200":
+            description: "Requested data returned"
+            schema:
+              $ref: "#/definitions/Offer"
+    /acceptOffer:
+      post:
+        description: "Accept an offer"
+        parameters:
+          -
+            name: "offer details"
+            in: "body"
+            required: true
+            schema:
+              type: "object"
+              required:
+                - "offerID"
+                - "job_id"
+              properties:
+                offerID:
+                  type:string
+                job_id:
+                  type:string
+        responses:
+          "200":
+            description: "Offer accepted successfully"
+          "401":
+            description: "Unauthorized"
+          "400":
+            description: "Bad or missing data"
   definitions: 
-    Pet: 
-      type: "object"
-      allOf: 
-        - 
-          $ref: "#/definitions/NewPet"
-        - 
-          required: 
-            - "id"
-          properties: 
-            id: 
-              type: "integer"
-              format: "int64"
-    NewPet: 
-      type: "object"
-      required: 
-        - "name"
-      properties: 
-        name: 
-          type: "string"
-        tag: 
-          type: "string"
-    ErrorModel: 
-      type: "object"
-      required: 
-        - "code"
-        - "message"
-      properties: 
-        code: 
-          type: "integer"
-          format: "int32"
-        message: 
-          type: "string"
-    NewUser:
+    User:
       type: "object"
       required:
         - "username"
@@ -142,6 +248,7 @@
           type: "string"
         type:
           type: "string"
+          description: "Type of user (mover/requester)"
         first_name:
           type: "string"
         last_name:
@@ -151,5 +258,58 @@
         phone:
           type: "string"
           description: "User's phone number"
-        zipcode: "string"
-        vehicle: "string"
+        zipcode:
+          type: "string"
+        vehicle:
+          type: "string"
+        photo:
+          type: "string"
+          format: "base64"
+        payment:
+          type: "string"
+    Job:
+      type: "object"
+      required:
+        - "start_time"
+        - "end_time"
+        - "start_address"
+        - "end_address"
+        - "description"
+        - "max_price"
+      properties:
+        start_time:
+          type: "string"
+        end_time:
+          type: "string"
+        start_address:
+          type: "string"
+        end_address:
+          type: "string"
+        description:
+          type: "string"
+        max_price:
+          type: "integer"
+    Offer:
+      type: "object"
+      required:
+        - "job_id"
+        - "price"
+        - "start_time"
+      properties:
+        job_id:
+          type: "string"
+        price:
+          type: "integer"
+        start_time:
+          type: "string"
+    Review:
+      type: "object"
+      required:
+        - "rating"
+        - "moverID"
+      properties:
+        rating: 
+          type: "integer"
+          description: "an integer between 1 and 5"
+        moverID:
+          type: "string"

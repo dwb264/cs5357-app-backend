@@ -8,6 +8,23 @@ import urllib2
 import unittest
 
 class MainTestCase(unittest.TestCase):
+	
+	DB_NAME = "man_in_van"
+	DB_HOST = "ds125126.mlab.com"
+	DB_PORT = 25126
+	DB_USER = "admin"
+	DB_PASS = "Hello7777"
+
+	connection = MongoClient(DB_HOST, DB_PORT)
+
+	db = connection[DB_NAME]
+	db.authenticate(DB_USER, DB_PASS)
+
+	users = db['users']
+	moverReviews = db['mover_reviews']
+	jobs = db['jobs']
+	offers = db['offers']
+	jobPhotos = db['job_photos']
 
 	def setUp(self):
 		# creates a test client

@@ -1,6 +1,8 @@
 from flask import session, Response
 
 import main
+import os
+import flaskr
 #from main import app
 import urllib2
 import unittest

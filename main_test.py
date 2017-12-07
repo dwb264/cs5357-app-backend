@@ -1,6 +1,6 @@
 from flask import session, Response
 
-
+import json
 from main import app
 import os
 #from main import app
@@ -29,7 +29,7 @@ class MainTestCase(unittest.TestCase):
 	    #assert 'Hello World' in r.data.decode('utf-8')
 	
 	def register(self, username, password):
-    		return self.app.post('/profile',data=dict(username=username, password=password),
+    		return self.app.post('/profile',data=json.dumps({'username':username, 'password':password}),
 	        follow_redirects=True)
 
 

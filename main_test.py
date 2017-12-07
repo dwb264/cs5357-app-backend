@@ -9,28 +9,29 @@ import unittest
 
 class MainTestCase(unittest.TestCase):
 	
-	DB_NAME = "man_in_van"
-	DB_HOST = "ds125126.mlab.com"
-	DB_PORT = 25126
-	DB_USER = "admin"
-	DB_PASS = "Hello7777"
-
-	connection = MongoClient(DB_HOST, DB_PORT)
-
-	db = connection[DB_NAME]
-	db.authenticate(DB_USER, DB_PASS)
-
-	users = db['users']
-	moverReviews = db['mover_reviews']
-	jobs = db['jobs']
-	offers = db['offers']
-	jobPhotos = db['job_photos']
-
 	def setUp(self):
 		# creates a test client
 		self.app = app.test_client()
 		# propagate the exceptions to the test client
 		self.app.testing = True
+		
+		DB_NAME = "man_in_van"
+		DB_HOST = "ds125126.mlab.com"
+		DB_PORT = 25126
+		DB_USER = "admin"
+		DB_PASS = "Hello7777"
+
+		connection = MongoClient(DB_HOST, DB_PORT)
+
+		db = connection[DB_NAME]
+		db.authenticate(DB_USER, DB_PASS)
+
+		users = db['users']
+		moverReviews = db['mover_reviews']
+		jobs = db['jobs']
+		offers = db['offers']
+		jobPhotos = db['job_photos']
+
 
 	'''def test_home_status_code(self):
 		result = self.app.get('/') 
@@ -59,10 +60,11 @@ class MainTestCase(unittest.TestCase):
 
 	def login(self, username, password):
 	    """Login helper function"""
-	    return self.app.post('/login', data=dict(
-		    username=username,
-		    password=password
-		), follow_redirects=True)
+	    headers = {'content-type': 'application/json'}
+	    return self.app.post('/login', data=json.dumps({
+		    'username':username,
+		    'password':password
+	    }),headers, follow_redirects=True)
 
 
 

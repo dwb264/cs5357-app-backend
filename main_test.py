@@ -27,6 +27,25 @@ class MainTestCase(unittest.TestCase):
 	    #r = self.app.get('/profile')
 	    #assert r.status_code == 200
 	    #assert 'Hello World' in r.data.decode('utf-8')
+	
+	def register(self, email, password, confirm):
+    		return self.app.post('/profile',data=dict(username=username, password=password),
+	        follow_redirects=True)
+
+
+    	def test_valid_user_registration(self):
+	    response = self.register('abc', 'hello1234')
+	    self.assertEqual(response.status_code, 200)
+	    self.assertIn(b'Thanks for registering!', response.data)
+
+
+	def login(self, username, password):
+	    """Login helper function"""
+	    return self.app.post('/login', data=dict(
+		    username=username,
+		    password=password
+		), follow_redirects=True)
+
 
 
 		

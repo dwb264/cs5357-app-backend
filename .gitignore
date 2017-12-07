@@ -4,3 +4,7 @@
 # Ignore intellij IDE settings
 .idea/
 env/
+
+api_key.py
+
+client-secret.json

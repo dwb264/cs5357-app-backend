@@ -210,6 +210,7 @@ def get_profile():
     user = users.find_one({'_id':ObjectId.ObjectId(session.get('user')['$oid'])})
 
     response = json_util.dumps(user)
+
     return response
 
 #the data passed should come from database - check the earlier implementation of the API
@@ -258,7 +259,7 @@ def verifyCode():
         serializable_user_obj = json.loads(json_util.dumps(user))
         session['user'] = serializable_user_obj['_id']
 
-        return Response(200)
+        return Response(status=200)
     else:
         raise BadRequest("Invalid code")
 
@@ -457,6 +458,8 @@ def addOffer():
 
     job = jobs.find_one({"_id":ObjectId.ObjectId(job_id)})
 
+    job = json.loads(json_util.dumps(job))
+
     if job is None:
         raise BadRequest("invalid Job ID")
 
@@ -478,7 +481,7 @@ def addOffer():
         raise NotFound('offer already exists')
 
     # check that mongo didn't fail
-    return Response(offerId,status=201)
+    return Response(status=201)
 
 
 @app.route('/getOffers/<job_id>', methods = ['GET'])
